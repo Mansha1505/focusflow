@@ -30,11 +30,11 @@ function ProgressPage() {
       const userId = getUserId();
 
       const taskRes = await axios.get(
-        `http://localhost:5000/api/tasks?user=${userId}`
+        `https://focusflow-backend-olwq.onrender.com/api/tasks?user=${userId}`
       );
 
       const planRes = await axios.get(
-        `http://localhost:5000/api/plans?user=${userId}`
+        `https://focusflow-backend-olwq.onrender.com/api/plans?user=${userId}`
       );
 
       setTasks(taskRes.data);

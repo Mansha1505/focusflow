@@ -16,7 +16,7 @@ function TasksPage() {
     const userId = getUserId();
 
     const res = await axios.get(
-      `http://localhost:5000/api/tasks?user=${userId}`
+      `https://focusflow-backend-olwq.onrender.com/api/tasks?user=${userId}`
     );
 
     setTasks(res.data);
@@ -38,7 +38,7 @@ const addTask = async () => {
 
   console.log("USER ID:", userId); // 👈 DEBUG
 
-  await axios.post("http://localhost:5000/api/tasks", {
+  await axios.post("https://focusflow-backend-olwq.onrender.com/api/tasks", {
     text,
     priority,
     user: userId, // ✅ MUST BE SENT
@@ -50,12 +50,12 @@ const addTask = async () => {
 };
 
   const deleteTask = async (id) => {
-    await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+    await axios.delete(`https://focusflow-backend-olwq.onrender.com/api/tasks/${id}`);
     fetchTasks();
   };
 
   const toggleComplete = async (id, currentStatus) => {
-    await axios.put(`http://localhost:5000/api/tasks/${id}`, {
+    await axios.put(`https://focusflow-backend-olwq.onrender.com/api/tasks/${id}`, {
       isCompleted: !currentStatus,
     });
 

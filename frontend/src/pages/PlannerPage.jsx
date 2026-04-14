@@ -15,7 +15,7 @@ function PlannerPage() {
       const userId = getUserId();
 
       const res = await axios.get(
-        `http://localhost:5000/api/plans?user=${userId}`
+        `https://focusflow-backend-olwq.onrender.com/api/plans?user=${userId}`
       );
 
       setPlans(res.data);
@@ -35,7 +35,7 @@ function PlannerPage() {
     try {
       const userId = getUserId();
 
-      await axios.post("http://localhost:5000/api/plans", {
+      await axios.post("https://focusflow-backend-olwq.onrender.com/api/plans", {
         text: plan,
         date,
         time, // ✅ NEW
@@ -54,14 +54,14 @@ function PlannerPage() {
 
   // ❌ DELETE
   const deletePlan = async (id) => {
-    await axios.delete(`http://localhost:5000/api/plans/${id}`);
+    await axios.delete(`https://focusflow-backend-olwq.onrender.com/api/plans/${id}`);
     fetchPlans();
   };
 
   // ✅ TOGGLE COMPLETE
   const toggleComplete = async (id, currentStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/plans/${id}`, {
+      await axios.put(`https://focusflow-backend-olwq.onrender.com/api/plans/${id}`, {
         isCompleted: !currentStatus,
       });
 

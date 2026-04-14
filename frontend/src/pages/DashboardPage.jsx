@@ -13,7 +13,7 @@ function DashboardPage() {
       const userId = getUserId();
 
       const res = await axios.get(
-        `http://localhost:5000/api/tasks?user=${userId}`
+        `https://focusflow-backend-olwq.onrender.com/api/tasks?user=${userId}`
       );
 
       setTasks(res.data);
@@ -28,7 +28,7 @@ function DashboardPage() {
       const userId = getUserId();
 
       const res = await axios.get(
-        `http://localhost:5000/api/plans?user=${userId}`
+        `https://focusflow-backend-olwq.onrender.com/api/plans?user=${userId}`
       );
 
       setPlans(res.data);

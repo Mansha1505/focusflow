@@ -21,7 +21,7 @@ function RegisterPage() {
   const handleRegister = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "https://focusflow-backend-olwq.onrender.com/api/auth/register",
         { name, email, password }
       );
 
