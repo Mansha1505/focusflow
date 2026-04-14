@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../utils/api";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 function TestimonialsPage() {
@@ -10,7 +10,7 @@ function TestimonialsPage() {
 
   // 🔄 FETCH
   const fetchReviews = async () => {
-    const res = await axios.get("https://focusflow-backend-5tcg.onrender.com/api/testimonials");
+    const res = await API.get("/api/testimonials");
     setReviews(res.data);
   };
   //redeploy fix
@@ -23,7 +23,7 @@ function TestimonialsPage() {
   const addReview = async () => {
     if (!name || !message) return;
 
-    await axios.post("https://focusflow-backend-5tcg.onrender.com/api/testimonials", {
+    await API.post("/api/testimonials", {
       name,
       message,
       rating,

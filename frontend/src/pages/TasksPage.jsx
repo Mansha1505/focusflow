@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import API from "../api";
+import API from "../utils/api";
 import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
@@ -15,8 +15,8 @@ function TasksPage() {
   try {
     const userId = getUserId();
 
-    const res = await axios.get(
-      `https://focusflow-backend-5tcg.onrender.com/api/tasks?user=${userId}`
+    const res = await API.get(
+      `/api/tasks?user=${userId}`
     );
 
     setTasks(res.data);

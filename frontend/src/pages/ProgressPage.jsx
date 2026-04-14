@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../utils/api";
 import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
@@ -29,12 +29,12 @@ function ProgressPage() {
     try {
       const userId = getUserId();
 
-      const taskRes = await axios.get(
-        `https://focusflow-backend-5tcg.onrender.com/api/tasks?user=${userId}`
+      const taskRes = await API.get(
+        `/api/tasks?user=${userId}`
       );
 
-      const planRes = await axios.get(
-        `https://focusflow-backend-5tcg.onrender.com/api/plans?user=${userId}`
+      const planRes = await API.get(
+        `/api/plans?user=${userId}`
       );
 
       setTasks(taskRes.data);

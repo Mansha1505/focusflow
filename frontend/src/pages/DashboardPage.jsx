@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../utils/api";
 import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
@@ -12,8 +12,8 @@ function DashboardPage() {
     try {
       const userId = getUserId();
 
-      const res = await axios.get(
-        `https://focusflow-backend-5tcg.onrender.com/api/tasks?user=${userId}`
+      const res = await API.get(
+        `/api/tasks?user=${userId}`
       );
 
       setTasks(res.data);
@@ -27,8 +27,8 @@ function DashboardPage() {
     try {
       const userId = getUserId();
 
-      const res = await axios.get(
-        `https://focusflow-backend-5tcg.onrender.com/api/plans?user=${userId}`
+      const res = await API.get(
+        `/api/plans?user=${userId}`
       );
 
       setPlans(res.data);

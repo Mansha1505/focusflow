@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import API from "../api";
+import API from "../utils/api";
 import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
