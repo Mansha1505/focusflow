@@ -1,4 +1,4 @@
-import API from "../utils/api";
+import axios from "axios";
 
 const API = axios.create({
   baseURL: "https://focusflow-backend-5tcg.onrender.com",
