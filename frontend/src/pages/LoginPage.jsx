@@ -1,5 +1,4 @@
 import { useState } from "react";
-import API from "../utils/api";
 import { useNavigate, Link } from "react-router-dom";
 
 function LoginPage() {
@@ -10,26 +9,36 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const res = await API.post(
-        "/api/auth/login",
-        { email, password }
+      const res = await fetch(
+        "https://focusflow-backend-5tcg.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
       );
 
-      localStorage.setItem("token", res.data.token);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      localStorage.setItem("token", data.token);
       navigate("/dashboard");
     } catch (err) {
+      console.log(err);
       alert("Invalid credentials");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-
-      {/* subtle gradient layer */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-100 opacity-60"></div>
 
       <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-sm w-full max-w-md border border-gray-200">
-
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           Welcome Back
         </h2>
@@ -63,7 +72,6 @@ function LoginPage() {
             Register
           </Link>
         </p>
-
       </div>
     </div>
   );

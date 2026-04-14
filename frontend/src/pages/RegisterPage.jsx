@@ -1,5 +1,4 @@
 import { useState } from "react";
-import API from "../utils/api";
 import { useNavigate, Link } from "react-router-dom";
 
 function RegisterPage() {
@@ -20,26 +19,36 @@ function RegisterPage() {
 
   const handleRegister = async () => {
     try {
-      await API.post(
-        "/api/auth/register",
-        { name, email, password }
+      const res = await fetch(
+        "https://focusflow-backend-5tcg.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
+        }
       );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
 
       alert("Registered successfully!");
       navigate("/login");
     } catch (err) {
+      console.log(err);
       alert("Registration failed");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-
-      {/* subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-100 opacity-60"></div>
 
       <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-sm w-full max-w-md border border-gray-200">
-
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           Create Account
         </h2>
@@ -49,7 +58,7 @@ function RegisterPage() {
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-4 p-3 rounded-lg border border-gray-300"
         />
 
         <input
@@ -57,7 +66,7 @@ function RegisterPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-4 p-3 rounded-lg border border-gray-300"
         />
 
         <input
@@ -65,7 +74,7 @@ function RegisterPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-2 p-3 rounded-lg border border-gray-300"
         />
 
         <p className="text-sm mb-4 text-gray-600">
@@ -96,7 +105,6 @@ function RegisterPage() {
             Login
           </Link>
         </p>
-
       </div>
     </div>
   );
