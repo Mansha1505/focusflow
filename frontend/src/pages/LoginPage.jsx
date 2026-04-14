@@ -11,7 +11,7 @@ function LoginPage() {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "https://focusflow-backend-olwq.onrender.com/api/auth/login",
+        "https://focusflow-backend-5tcg.onrender.com/api/auth/login",
         { email, password }
       );
 

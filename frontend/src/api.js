@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://focusflow-backend-olwq.onrender.com/api",
+  baseURL: "https://focusflow-backend-5tcg.onrender.com/api",
 });
 
 export default API;

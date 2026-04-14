@@ -10,7 +10,7 @@ function TestimonialsPage() {
 
   // 🔄 FETCH
   const fetchReviews = async () => {
-    const res = await axios.get("https://focusflow-backend-olwq.onrender.com/api/testimonials");
+    const res = await axios.get("https://focusflow-backend-5tcg.onrender.com/api/testimonials");
     setReviews(res.data);
   };
 
@@ -22,7 +22,7 @@ function TestimonialsPage() {
   const addReview = async () => {
     if (!name || !message) return;
 
-    await axios.post("https://focusflow-backend-olwq.onrender.com/api/testimonials", {
+    await axios.post("https://focusflow-backend-5tcg.onrender.com/api/testimonials", {
       name,
       message,
       rating,
