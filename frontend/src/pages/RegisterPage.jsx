@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api";
 import { useNavigate, Link } from "react-router-dom";
 
 function RegisterPage() {
@@ -20,8 +20,8 @@ function RegisterPage() {
 
   const handleRegister = async () => {
     try {
-      await axios.post(
-        "https://focusflow-backend-5tcg.onrender.com/api/auth/register",
+      await API.post(
+        "/api/auth/register",
         { name, email, password }
       );
 

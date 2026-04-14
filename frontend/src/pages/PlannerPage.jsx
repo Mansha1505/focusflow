@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api";
 import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
@@ -14,8 +14,8 @@ function PlannerPage() {
     try {
       const userId = getUserId();
 
-      const res = await axios.get(
-        `https://focusflow-backend-5tcg.onrender.com/api/plans?user=${userId}`
+      const res = await API.get(
+        `/api/plans?user=${userId}`
       );
 
       setPlans(res.data);
@@ -35,7 +35,7 @@ function PlannerPage() {
     try {
       const userId = getUserId();
 
-      await axios.post("https://focusflow-backend-5tcg.onrender.com/api/plans", {
+      await API.post("/api/plans", {
         text: plan,
         date,
         time, // ✅ NEW
@@ -54,14 +54,14 @@ function PlannerPage() {
 
   // ❌ DELETE
   const deletePlan = async (id) => {
-    await axios.delete(`https://focusflow-backend-5tcg.onrender.com/api/plans/${id}`);
+    await API.delete(`/api/plans/${id}`);
     fetchPlans();
   };
 
   // ✅ TOGGLE COMPLETE
   const toggleComplete = async (id, currentStatus) => {
     try {
-      await axios.put(`https://focusflow-backend-5tcg.onrender.com/api/plans/${id}`, {
+      await API.put(`/api/plans/${id}`, {
         isCompleted: !currentStatus,
       });
 

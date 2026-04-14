@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api";
 import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
@@ -38,7 +38,7 @@ const addTask = async () => {
 
   console.log("USER ID:", userId); // 👈 DEBUG
 
-  await axios.post("https://focusflow-backend-5tcg.onrender.com/api/tasks", {
+  await API.post("/api/tasks", {
     text,
     priority,
     user: userId, // ✅ MUST BE SENT
@@ -50,12 +50,12 @@ const addTask = async () => {
 };
 
   const deleteTask = async (id) => {
-    await axios.delete(`https://focusflow-backend-5tcg.onrender.com/api/tasks/${id}`);
+    await API.delete(`/api/tasks/${id}`);
     fetchTasks();
   };
 
   const toggleComplete = async (id, currentStatus) => {
-    await axios.put(`https://focusflow-backend-5tcg.onrender.com/api/tasks/${id}`, {
+    await API.put(`/api/tasks/${id}`, {
       isCompleted: !currentStatus,
     });
 
