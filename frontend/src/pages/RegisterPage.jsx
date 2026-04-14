@@ -19,18 +19,21 @@ function RegisterPage() {
 
   const handleRegister = async () => {
     try {
-      const res = await fetch(
-        "https://focusflow-backend-5tcg.onrender.com/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, email, password }),
-        }
-      );
+      const res = await fetch("https://focusflow-backend-5tcg.onrender.com/api/auth/register", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ name, email, password }),
+});
 
-      const data = await res.json();
+if (!res.ok) {
+  const text = await res.text(); // safer
+  console.log(text);
+  throw new Error("Request failed");
+}
+
+const data = await res.json();
 
       if (!res.ok) {
         throw new Error(data.error || "Registration failed");
