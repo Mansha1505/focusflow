@@ -9,47 +9,43 @@ function RegisterPage() {
   const navigate = useNavigate();
 
   const handleRegister = async () => {
-    const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
+  console.log("RAW STATE:", name, email, password);
 
-    console.log("DEBUG:", trimmedName, trimmedEmail, trimmedPassword);
-
-    // ✅ Validation
-    if (!trimmedName || !trimmedEmail || !trimmedPassword) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    try {
-      const res = await fetch(
-        "https://focusflow-backend-5tcg.onrender.com/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: trimmedName,
-            email: trimmedEmail,
-            password: trimmedPassword,
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
-
-      alert("Registered successfully!");
-      navigate("/login");
-    } catch (err) {
-      console.log("ERROR:", err);
-      alert(err.message);
-    }
+  const payload = {
+    name: name?.trim() || "defaultName",
+    email: email?.trim(),
+    password: password?.trim(),
   };
+
+  console.log("FINAL PAYLOAD:", payload);
+
+  if (!payload.email || !payload.password) {
+    alert("Email and password required");
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      "https://focusflow-backend-5tcg.onrender.com/api/auth/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message);
+
+    alert("Registered successfully!");
+  } catch (err) {
+    console.log(err);
+    alert(err.message);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
