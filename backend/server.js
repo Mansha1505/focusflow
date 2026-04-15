@@ -30,8 +30,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ CONNECT MONGODB ATLAS
-mongoose
-  .connect(process.env.MONGO_URI)
+mongoose.connect("mongodb+srv://bajpaimb15_db_user:manshab1505@cluster0.9uxkjtg.mongodb.net/focusflow?retryWrites=true&w=majority")
   .then(() => console.log("✅ MongoDB Atlas Connected"))
   .catch((err) => console.log("❌ MONGO ERROR:", err.message));// server
 
