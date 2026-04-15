@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
 function LoginPage() {
@@ -9,28 +8,48 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      alert("Please fill all fields");
+      return;
+    }
+
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password }
+      console.log("Login:", email, password);
+
+      const res = await fetch(
+        "https://focusflow-backend-5tcg.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password: password.trim(),
+          }),
+        }
       );
 
-      localStorage.setItem("token", res.data.token);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      localStorage.setItem("token", data.token);
+
+      alert("Login successful!");
       navigate("/dashboard");
     } catch (err) {
-      alert("Invalid credentials");
+      console.log(err);
+      alert(err.message);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-
-      {/* subtle gradient layer */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-100 opacity-60"></div>
-
-      <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-sm w-full max-w-md border border-gray-200">
-
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+      <div className="bg-white p-8 rounded-xl shadow-sm w-full max-w-md">
+        <h2 className="text-2xl font-semibold mb-6 text-center">
           Welcome Back
         </h2>
 
@@ -39,7 +58,7 @@ function LoginPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-4 p-3 border rounded"
         />
 
         <input
@@ -47,23 +66,20 @@ function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-6 p-3 border rounded"
         />
 
         <button
           onClick={handleLogin}
-          className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-700 transition"
+          className="w-full bg-gray-800 text-white py-3 rounded"
         >
           Sign In
         </button>
 
-        <p className="text-center mt-4 text-sm text-gray-600">
+        <p className="text-center mt-4 text-sm">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-gray-800 font-medium">
-            Register
-          </Link>
+          <Link to="/register">Register</Link>
         </p>
-
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
 function RegisterPage() {
@@ -9,38 +8,49 @@ function RegisterPage() {
 
   const navigate = useNavigate();
 
-  const getStrength = () => {
-    if (password.length < 6) return "Weak";
-    if (password.match(/[A-Z]/) && password.match(/[0-9]/))
-      return "Strong";
-    return "Medium";
-  };
-
-  const strength = getStrength();
-
   const handleRegister = async () => {
+    // ✅ Frontend validation
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      alert("Please fill all fields");
+      return;
+    }
+
     try {
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
-        { name, email, password }
+      console.log("Sending:", name, email, password); // debug
+
+      const res = await fetch(
+        "https://focusflow-backend-5tcg.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            password: password.trim(),
+          }),
+        }
       );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
 
       alert("Registered successfully!");
       navigate("/login");
     } catch (err) {
-      alert("Registration failed");
+      console.log(err);
+      alert(err.message);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-
-      {/* subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-100 opacity-60"></div>
-
-      <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-sm w-full max-w-md border border-gray-200">
-
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+      <div className="bg-white p-8 rounded-xl shadow-sm w-full max-w-md">
+        <h2 className="text-2xl font-semibold mb-6 text-center">
           Create Account
         </h2>
 
@@ -49,7 +59,7 @@ function RegisterPage() {
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-4 p-3 border rounded"
         />
 
         <input
@@ -57,7 +67,7 @@ function RegisterPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-4 p-3 border rounded"
         />
 
         <input
@@ -65,38 +75,20 @@ function RegisterPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full mb-6 p-3 border rounded"
         />
-
-        <p className="text-sm mb-4 text-gray-600">
-          Strength:{" "}
-          <span
-            className={
-              strength === "Weak"
-                ? "text-red-500"
-                : strength === "Medium"
-                ? "text-yellow-500"
-                : "text-green-500"
-            }
-          >
-            {strength}
-          </span>
-        </p>
 
         <button
           onClick={handleRegister}
-          className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-700 transition"
+          className="w-full bg-gray-800 text-white py-3 rounded"
         >
           Sign Up
         </button>
 
-        <p className="text-center mt-4 text-sm text-gray-600">
+        <p className="text-center mt-4 text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="text-gray-800 font-medium">
-            Login
-          </Link>
+          <Link to="/login">Login</Link>
         </p>
-
       </div>
     </div>
   );
