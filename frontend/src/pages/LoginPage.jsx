@@ -11,9 +11,8 @@ function LoginPage() {
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
 
-    console.log("LOGIN DEBUG:", trimmedEmail, trimmedPassword);
+    console.log("LOGIN:", trimmedEmail, trimmedPassword);
 
-    // ✅ Validation
     if (!trimmedEmail || !trimmedPassword) {
       alert("Please fill all fields");
       return;
@@ -37,58 +36,53 @@ function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message);
       }
 
-      // ✅ Save token
       localStorage.setItem("token", data.token);
 
       alert("Login successful!");
       navigate("/dashboard");
+
     } catch (err) {
-      console.log("LOGIN ERROR:", err);
+      console.log(err);
       alert(err.message);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-      <div className="bg-white p-8 rounded-xl shadow-sm w-full max-w-md border border-gray-200">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+      <div className="bg-white p-8 rounded-xl shadow-sm w-full max-w-md">
+        <h2 className="text-2xl font-semibold mb-6 text-center">
           Welcome Back
         </h2>
 
-        {/* EMAIL */}
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 p-3 rounded-lg border border-gray-300"
+          className="w-full mb-4 p-3 border rounded"
         />
 
-        {/* PASSWORD */}
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 p-3 rounded-lg border border-gray-300"
+          className="w-full mb-6 p-3 border rounded"
         />
 
-        {/* BUTTON */}
         <button
           onClick={handleLogin}
-          className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-700 transition"
+          className="w-full bg-gray-800 text-white py-3 rounded"
         >
           Sign In
         </button>
 
-        <p className="text-center mt-4 text-sm text-gray-600">
+        <p className="text-center mt-4 text-sm">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-gray-800 font-medium">
-            Register
-          </Link>
+          <Link to="/register">Register</Link>
         </p>
       </div>
     </div>
