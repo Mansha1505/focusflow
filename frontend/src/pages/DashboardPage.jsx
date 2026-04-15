@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api";
 import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 function DashboardPage() {
   const [tasks, setTasks] = useState([]);
-  const [plans, setPlans] = useState([]); // ✅ NEW
+  const [plans, setPlans] = useState([]);
 
-  // 🔄 FETCH USER TASKS
+  // 🔄 FETCH TASKS
   const fetchTasks = async () => {
     try {
       const userId = getUserId();
 
-      const res = await axios.get(
-        `http://localhost:5000/api/tasks?user=${userId}`
-      );
+      const res = await API.get(`/api/tasks?user=${userId}`);
 
       setTasks(res.data);
     } catch (err) {
@@ -22,14 +20,12 @@ function DashboardPage() {
     }
   };
 
-  // 🔄 FETCH PLANS (NEW)
+  // 🔄 FETCH PLANS
   const fetchPlans = async () => {
     try {
       const userId = getUserId();
 
-      const res = await axios.get(
-        `http://localhost:5000/api/plans?user=${userId}`
-      );
+      const res = await API.get(`/api/plans?user=${userId}`);
 
       setPlans(res.data);
     } catch (err) {
@@ -39,14 +35,14 @@ function DashboardPage() {
 
   useEffect(() => {
     fetchTasks();
-    fetchPlans(); // ✅ NEW
+    fetchPlans();
   }, []);
 
-  // 🔁 REFRESH WHEN TAB ACTIVE
+  // 🔁 REFRESH ON TAB FOCUS
   useEffect(() => {
     const handleFocus = () => {
       fetchTasks();
-      fetchPlans(); // ✅ NEW
+      fetchPlans();
     };
 
     window.addEventListener("focus", handleFocus);
@@ -56,7 +52,7 @@ function DashboardPage() {
     };
   }, []);
 
-  // 📊 TASK CALCULATIONS (UNCHANGED)
+  // 📊 TASK CALCULATIONS
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((t) => t.isCompleted).length;
   const pendingTasks = totalTasks - completedTasks;
@@ -64,12 +60,11 @@ function DashboardPage() {
   const completionRate =
     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
-  // 📅 PLAN CALCULATIONS (NEW)
+  // 📅 PLAN CALCULATIONS
   const totalPlans = plans.length;
   const completedPlans = plans.filter((p) => p.isCompleted).length;
 
   const today = new Date().toISOString().split("T")[0];
-
   const todayPlans = plans.filter((p) => p.date === today).length;
 
   return (
@@ -79,7 +74,7 @@ function DashboardPage() {
         Dashboard Overview
       </h2>
 
-      {/* 📊 TASK CARDS (UNCHANGED) */}
+      {/* TASK CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
 
         <div className="bg-white p-5 rounded-xl shadow text-center">
@@ -112,7 +107,7 @@ function DashboardPage() {
 
       </div>
 
-      {/* 📅 NEW PLANNER CARDS */}
+      {/* PLANNER CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
         <div className="bg-white p-5 rounded-xl shadow text-center">
@@ -138,7 +133,7 @@ function DashboardPage() {
 
       </div>
 
-      {/* 📈 PROGRESS BAR (UNCHANGED) */}
+      {/* PROGRESS */}
       <div className="bg-white p-6 rounded-xl shadow">
 
         <h3 className="mb-3 font-semibold">Progress</h3>

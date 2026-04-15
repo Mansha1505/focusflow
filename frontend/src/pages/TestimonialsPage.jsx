@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 function TestimonialsPage() {
@@ -10,8 +10,12 @@ function TestimonialsPage() {
 
   // 🔄 FETCH
   const fetchReviews = async () => {
-    const res = await axios.get("http://localhost:5000/api/testimonials");
-    setReviews(res.data);
+    try {
+      const res = await API.get("/api/testimonials");
+      setReviews(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -22,16 +26,20 @@ function TestimonialsPage() {
   const addReview = async () => {
     if (!name || !message) return;
 
-    await axios.post("http://localhost:5000/api/testimonials", {
-      name,
-      message,
-      rating,
-    });
+    try {
+      await API.post("/api/testimonials", {
+        name,
+        message,
+        rating,
+      });
 
-    setName("");
-    setMessage("");
-    setRating(5);
-    fetchReviews();
+      setName("");
+      setMessage("");
+      setRating(5);
+      fetchReviews();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -41,34 +49,33 @@ function TestimonialsPage() {
         What Users Say 💬
       </h2>
 
-      {/* ⭐ DUMMY TESTIMONIALS (BIG) */}
+      {/* STATIC TESTIMONIALS */}
       <div className="grid md:grid-cols-3 gap-6 mb-10">
 
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-600">
-            FocusFlow completely transformed my productivity. I can now
-            manage tasks effortlessly!
+            FocusFlow completely transformed my productivity.
           </p>
           <h3 className="mt-4 font-semibold">— Aditi</h3>
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-600">
-            The timer + planner combo is insane. I study more efficiently now.
+            The timer + planner combo is amazing.
           </p>
           <h3 className="mt-4 font-semibold">— Rahul</h3>
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-600">
-            Clean UI, smooth experience. Best productivity app I’ve used!
+            Clean UI, smooth experience.
           </p>
           <h3 className="mt-4 font-semibold">— Sneha</h3>
         </div>
 
       </div>
 
-      {/* ➕ ADD REVIEW */}
+      {/* ADD REVIEW */}
       <div className="bg-white p-5 rounded-xl shadow mb-6 flex flex-col gap-3">
 
         <h3 className="font-semibold">Share your experience</h3>
@@ -109,7 +116,7 @@ function TestimonialsPage() {
 
       </div>
 
-      {/* 👇 USER TESTIMONIALS (SMALL CARDS) */}
+      {/* USER REVIEWS */}
       <div>
 
         <h3 className="text-lg font-semibold mb-4">

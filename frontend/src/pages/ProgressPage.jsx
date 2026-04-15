@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { getUserId } from "../utils/getUser";
+import API from "../api";import { getUserId } from "../utils/getUser";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 import {
@@ -26,23 +25,18 @@ function ProgressPage() {
 
   // 🔄 FETCH
   const fetchData = async () => {
-    try {
-      const userId = getUserId();
+  try {
+    const userId = getUserId();
 
-      const taskRes = await axios.get(
-        `http://localhost:5000/api/tasks?user=${userId}`
-      );
+    const taskRes = await API.get(`/api/tasks?user=${userId}`);
+    const planRes = await API.get(`/api/plans?user=${userId}`);
 
-      const planRes = await axios.get(
-        `http://localhost:5000/api/plans?user=${userId}`
-      );
-
-      setTasks(taskRes.data);
-      setPlans(planRes.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    setTasks(taskRes.data);
+    setPlans(planRes.data);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   useEffect(() => {
     fetchData();
