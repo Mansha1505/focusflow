@@ -86,5 +86,5 @@ function RegisterPage() {
     </div>
   );
 }
-
+console.log("NEW BUILD V3");
 export default RegisterPage;
