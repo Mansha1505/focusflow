@@ -5,6 +5,7 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+
 // ================= REGISTER =================
 router.post("/register", async (req, res) => {
   try {
@@ -12,32 +13,44 @@ router.post("/register", async (req, res) => {
 
     console.log("REGISTER:", req.body);
 
+    // ✅ Only email & password required
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password required" });
+      return res.status(400).json({
+        message: "Email and password required",
+      });
     }
 
-    const existingUser = await User.findOne({
-      email: email.toLowerCase(),
-    });
+    // ✅ Normalize email
+    const lowerEmail = email.toLowerCase();
 
+    // ✅ Check existing user
+    const existingUser = await User.findOne({ email: lowerEmail });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+        message: "User already exists",
+      });
     }
 
+    // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // ✅ Create user
     const user = new User({
-      email: email.toLowerCase(),
+      email: lowerEmail,
       password: hashedPassword,
     });
 
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "User registered successfully",
+    });
 
   } catch (err) {
-    console.error("REGISTER ERROR:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ REGISTER ERROR:", err);
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 });
 
@@ -50,21 +63,27 @@ router.post("/login", async (req, res) => {
     console.log("LOGIN:", req.body);
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password required" });
+      return res.status(400).json({
+        message: "Email and password required",
+      });
     }
 
-    const user = await User.findOne({
-      email: email.toLowerCase(),
-    });
+    const lowerEmail = email.toLowerCase();
+
+    const user = await User.findOne({ email: lowerEmail });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({
+        message: "User not found",
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
     }
 
     const token = jwt.sign({ id: user._id }, "mysecret123");
@@ -75,8 +94,10 @@ router.post("/login", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ LOGIN ERROR:", err);
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 });
 
