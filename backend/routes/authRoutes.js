@@ -9,41 +9,48 @@ const router = express.Router();
 // ================= REGISTER =================
 router.post("/register", async (req, res) => {
   try {
-    console.log("REGISTER BODY:", req.body);
+    const { email, password } = req.body;
 
-    const { name, email, password } = req.body;
+    console.log("REGISTER:", req.body);
 
-    // ✅ Validation (prevents crashes)
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+    // ✅ Only email & password required
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password required",
+      });
     }
 
     // ✅ Normalize email
     const lowerEmail = email.toLowerCase();
 
-    // ✅ Check if user already exists
+    // ✅ Check existing user
     const existingUser = await User.findOne({ email: lowerEmail });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+        message: "User already exists",
+      });
     }
 
-    // ✅ Hash password safely
+    // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Save user
+    // ✅ Create user
     const user = new User({
-      name,
       email: lowerEmail,
       password: hashedPassword,
     });
 
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "User registered successfully",
+    });
 
   } catch (err) {
     console.error("❌ REGISTER ERROR:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 });
 
@@ -51,32 +58,35 @@ router.post("/register", async (req, res) => {
 // ================= LOGIN =================
 router.post("/login", async (req, res) => {
   try {
-    console.log("LOGIN BODY:", req.body);
-
     const { email, password } = req.body;
+
+    console.log("LOGIN:", req.body);
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password required",
+      });
+    }
 
     const lowerEmail = email.toLowerCase();
 
-    // ✅ Find user
     const user = await User.findOne({ email: lowerEmail });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({
+        message: "User not found",
+      });
     }
 
-    // ✅ Compare password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
     }
 
-    // ✅ Token
-    const token = jwt.sign(
-      { id: user._id },
-      "secretkey",
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign({ id: user._id }, "mysecret123");
 
     res.json({
       message: "Login successful",
@@ -85,9 +95,10 @@ router.post("/login", async (req, res) => {
 
   } catch (err) {
     console.error("❌ LOGIN ERROR:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 });
-
 
 export default router;
